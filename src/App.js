@@ -7,6 +7,7 @@ import TabbedLayout from "./TabbedLayout";
 import LoginPage from "./LoginPage";
 import {
 	getAssets,
+	getPosition,
 	getOrderBook,
 	getTrades,
 	getOrders,
@@ -52,6 +53,7 @@ function App() {
 					<OrderBook
 						username={username}
 						getOrderBook={getOrderBook}
+						getPosition={getPosition}
 						getTrades={getTrades}
 						getPnL={getPnL}
 						assets={assets}

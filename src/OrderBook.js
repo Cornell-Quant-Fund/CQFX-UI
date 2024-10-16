@@ -2,28 +2,31 @@ import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 
-const OrderBook = ({ username, getOrderBook, getTrades, getPnL, assets }) => {
+const OrderBook = ({ username, getOrderBook, getPosition, getTrades, getPnL, assets }) => {
 	const [activeAsset, setActiveAsset] = useState(assets[0]);
+	const [positions, setPositions] = useState({});
 	const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
 	const [tradeHistory, setTradeHistory] = useState([]);
 	const [pnl, setPnl] = useState(0);
 	const chartRef = useRef(null);
 
 	useEffect(() => {
-		const fetchPnL = async () => {
+		const fetchPnLPos = async () => {
 			const pnl = await getPnL(username);
 			setPnl(pnl); // Assuming response is { pnl }
+			const userPositions = await getPosition(username);
+        	setPositions(userPositions);
 		};
 
-		fetchPnL();
+		fetchPnLPos();
 
 		// Set up periodic fetching of orders and PnL every 10 seconds
 		const intervalId = setInterval(() => {
-			fetchPnL();
+			fetchPnLPos();
 		}, 1000); // 1 seconds interval
 
 		return () => clearInterval(intervalId);
-	}, [getPnL, username]);
+	}, [getPnL, getPosition, username]);
 
 	useEffect(() => {
 		const fetchOrderBook = async () => {
@@ -201,6 +204,13 @@ const OrderBook = ({ username, getOrderBook, getTrades, getPnL, assets }) => {
 					</div>
 					<div className="chart-container">
 						<svg ref={chartRef}></svg>
+					</div>
+					<div className="border-2 p-2 rounded-md">
+						{assets.map(asset => (
+							<div key={asset}>
+							{asset}: {positions[asset]}
+							</div>
+						))}
 					</div>
 				</div>
 			</div>

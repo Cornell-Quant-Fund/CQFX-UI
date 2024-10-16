@@ -31,6 +31,28 @@ export const getOrders = async (username) => {
     }
 };
 
+export const getPosition = async (username) => {
+    try {
+        const response = await fetch(`${BASE_URL}/position/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: username
+            }),
+        });
+        if (!response.ok) {
+            throw new Error('Error fetching orders');
+        }
+        const result = await response.json();
+        return result["position"];  // Assuming the response format is [{ id, asset, qty, price, side }]
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
 export const getTrades = async (asset) => {
     try {
         const response = await fetch(`${BASE_URL}/trades/`, {
