@@ -8,7 +8,7 @@ import LoginPage from "./LoginPage";
 import {
 	getAssets,
 	getOrderBook,
-  getTrades,
+	getTrades,
 	getOrders,
 	createOrder,
 	cancelOrder,
@@ -49,14 +49,19 @@ function App() {
 		<div className="App">
 			<TabbedLayout>
 				<div label="Order Book">
-					<OrderBook getOrderBook={getOrderBook} getTrades={getTrades} assets={assets} />
+					<OrderBook
+						username={username}
+						getOrderBook={getOrderBook}
+						getTrades={getTrades}
+						getPnL={getPnL}
+						assets={assets}
+					/>
 				</div>
 				<div label="Outgoing Orders">
 					<OutgoingOrders
 						username={username}
 						getOrders={getOrders}
 						cancelOrder={cancelOrder}
-						getPnL={getPnL}
 					/>
 				</div>
 				<div label="Send Order">

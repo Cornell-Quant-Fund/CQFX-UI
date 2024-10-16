@@ -2,11 +2,28 @@ import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 
-const OrderBook = ({ getOrderBook, getTrades, assets }) => {
+const OrderBook = ({ username, getOrderBook, getTrades, getPnL, assets }) => {
 	const [activeAsset, setActiveAsset] = useState(assets[0]);
 	const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
 	const [tradeHistory, setTradeHistory] = useState([]);
+	const [pnl, setPnl] = useState(0);
 	const chartRef = useRef(null);
+
+	useEffect(() => {
+		const fetchPnL = async () => {
+			const pnl = await getPnL(username);
+			setPnl(pnl); // Assuming response is { pnl }
+		};
+
+		fetchPnL();
+
+		// Set up periodic fetching of orders and PnL every 10 seconds
+		const intervalId = setInterval(() => {
+			fetchPnL();
+		}, 1000); // 1 seconds interval
+
+		return () => clearInterval(intervalId);
+	}, [getPnL, username]);
 
 	useEffect(() => {
 		const fetchOrderBook = async () => {
@@ -37,13 +54,13 @@ const OrderBook = ({ getOrderBook, getTrades, assets }) => {
 	}, [activeAsset, getOrderBook, getTrades]);
 
 	const plotTrades = (trades) => {
+		const svg = d3.select(chartRef.current);
+		svg.selectAll("*").remove();
+
 		if (!trades || trades.length === 0) {
 			console.warn("no trades");
 			return;
 		}
-
-		const svg = d3.select(chartRef.current);
-		svg.selectAll("*").remove(); // clear previous plot
 
 		const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 		const width = 400 - margin.left - margin.right;
@@ -90,16 +107,21 @@ const OrderBook = ({ getOrderBook, getTrades, assets }) => {
 
 	return (
 		<div className="order-book">
-			<div className="tabs">
-				{assets.map((asset) => (
-					<button
-						key={asset}
-						onClick={() => setActiveAsset(asset)}
-						className={activeAsset === asset ? "active" : ""}
-					>
-						{asset}
-					</button>
-				))}
+			<div className="flex flex-row justify-between items-center">
+				<div className="tabs">
+					{assets.map((asset) => (
+						<button
+							key={asset}
+							onClick={() => setActiveAsset(asset)}
+							className={activeAsset === asset ? "active" : ""}
+						>
+							{asset}
+						</button>
+					))}
+				</div>
+				<div className="border-2 p-2 rounded-md">
+					Current PnL: ${pnl.toFixed(2)}
+				</div>
 			</div>
 			<div className="orders">
 				<h3 className="font-bold pt-2 pb-2">
