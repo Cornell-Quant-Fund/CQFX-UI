@@ -8,6 +8,7 @@ import LoginPage from "./LoginPage";
 import {
 	getAssets,
 	getOrderBook,
+  getTrades,
 	getOrders,
 	createOrder,
 	cancelOrder,
@@ -48,7 +49,7 @@ function App() {
 		<div className="App">
 			<TabbedLayout>
 				<div label="Order Book">
-					<OrderBook getOrderBook={getOrderBook} assets={assets} />
+					<OrderBook getOrderBook={getOrderBook} getTrades={getTrades} assets={assets} />
 				</div>
 				<div label="Outgoing Orders">
 					<OutgoingOrders

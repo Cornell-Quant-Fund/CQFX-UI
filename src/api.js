@@ -30,6 +30,28 @@ export const getOrders = async (username) => {
         return [];
     }
 };
+
+export const getTrades = async (asset) => {
+    try {
+        const response = await fetch(`${BASE_URL}/trades/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                asset: asset
+            }),
+        });
+        if (!response.ok) {
+            throw new Error('Error fetching orders');
+        }
+        const result = await response.json();
+        return result["trades"];
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
   
 // Function to create a new order
 export const createOrder = async (username, order, asset) => {
