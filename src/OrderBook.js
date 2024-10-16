@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
-const OrderBook = ({ getOrderBook, symbols }) => {
-  const [activeSymbol, setActiveSymbol] = useState(symbols[0]);
+const OrderBook = ({ getOrderBook, assets }) => {
+  const [activeAsset, setActiveAsset] = useState(assets[0]);
   const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
 
   useEffect(() => {
     const fetchOrderBook = async () => {
-      const data = await getOrderBook(activeSymbol);
+      const data = await getOrderBook(activeAsset);
       if (data) {
         setOrderBook({ bids: data["bids"], asks: data["asks"] });
       }
     };
 
     fetchOrderBook();
-  }, [activeSymbol, getOrderBook]);
+  }, [activeAsset, getOrderBook]);
 
   return (
     <div className="order-book">
       <div className="tabs">
-        {symbols.map((symbol) => (
+        {assets.map((asset) => (
           <button
-            key={symbol}
-            onClick={() => setActiveSymbol(symbol)}
-            className={activeSymbol === symbol ? 'active' : ''}
+            key={asset}
+            onClick={() => setActiveAsset(asset)}
+            className={activeAsset === asset ? 'active' : ''}
           >
-            {symbol}
+            {asset}
           </button>
         ))}
       </div>
       <div className="orders">
-        <h3>{activeSymbol} Order Book</h3>
+        <h3>{activeAsset} Order Book</h3>
         <div className="bids-asks">
           <div>
             <h4>Bids</h4>

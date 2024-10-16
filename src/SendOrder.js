@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-const SendOrder = ({ createOrder, username, symbols }) => {
-  const [symbol, setSymbol] = useState(symbols[0]);
+const SendOrder = ({ createOrder, username, assets }) => {
+  const [asset, setAsset] = useState(assets[0]);
   const [price, setPrice] = useState('');
   const [qty, setQty] = useState('');
-  const [orderType, setOrderType] = useState('bid');
+  const [orderSide, setOrderSide] = useState('bid');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const orderData = { order_type: "limit", side: orderType, qty: parseFloat(qty), price: parseFloat(price), lifespan: 30000 };
-    await createOrder(username, orderData, symbol);
+    const orderData = { order_type: "limit", side: orderSide, qty: parseFloat(qty), price: parseFloat(price), lifespan: 30000 };
+    await createOrder(username, orderData, asset);
     setPrice('');
     setQty('');
   };
@@ -19,24 +19,24 @@ const SendOrder = ({ createOrder, username, symbols }) => {
       <h3>Send Order</h3>
       <div className="tabs">
         <button
-          className={orderType === 'bid' ? 'active' : ''}
-          onClick={() => setOrderType('bid')}
+          className={orderSide === 'bid' ? 'active' : ''}
+          onClick={() => setOrderSide('bid')}
         >
           Bid
         </button>
         <button
-          className={orderType === 'ask' ? 'active' : ''}
-          onClick={() => setOrderType('ask')}
+          className={orderSide === 'ask' ? 'active' : ''}
+          onClick={() => setOrderSide('ask')}
         >
           Ask
         </button>
       </div>
       <form onSubmit={handleSubmit}>
-        <label>Symbol</label>
-        <select value={symbol} onChange={(e) => setSymbol(e.target.value)}>
-          {symbols.map((symbol) => (
-            <option key={symbol} value={symbol}>
-              {symbol}
+        <label>Asset</label>
+        <select value={asset} onChange={(e) => setAsset(e.target.value)}>
+          {assets.map((asset) => (
+            <option key={asset} value={asset}>
+              {asset}
             </option>
           ))}
         </select>

@@ -11,8 +11,8 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder, getPnL }) => {
     };
 
     const fetchPnL = async () => {
-      const pnlData = await getPnL(username);
-      setPnl(pnlData.pnl);  // Assuming response is { pnl }
+      const pnl = await getPnL(username);
+      setPnl(pnl);  // Assuming response is { pnl }
     };
 
     fetchOrders();
@@ -22,7 +22,7 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder, getPnL }) => {
     const intervalId = setInterval(() => {
       fetchOrders();
       fetchPnL();
-    }, 10000);  // 10 seconds interval
+    }, 1000);  // 1 seconds interval
 
     return () => clearInterval(intervalId);
   }, [getOrders, getPnL, username]);
@@ -33,6 +33,7 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder, getPnL }) => {
       setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
     }
   };
+  console.log(orders);
 
   return (
     <div className="outgoing-orders">
@@ -40,7 +41,7 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder, getPnL }) => {
       <div className="orders-list">
         {orders.map((order) => (
           <div key={order.id} className="order">
-            <span>{order.symbol} - {order.size}@{order.price}</span>
+            <span>{order.asset} - {order.side} {order.qty}@{order.price}</span>
             <button onClick={() => handleCancel(order.id)} className="cancel-button">
               Cancel
             </button>

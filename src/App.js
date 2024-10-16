@@ -5,21 +5,21 @@ import SendOrder from './SendOrder';
 import NewsTab from './NewsTab';
 import TabbedLayout from './TabbedLayout';
 import LoginPage from './LoginPage';
-import { getSymbols, getOrderBook, getOrders, createOrder, cancelOrder, fetchNews, getPnL } from './api';
+import { getAssets, getOrderBook, getOrders, createOrder, cancelOrder, fetchNews, getPnL } from './api';
 import './App.css';
 
 function App() {
-  const [symbols, setSymbols] = useState([]);
+  const [assets, setAssets] = useState([]);
   const [username, setUsername] = useState(null);
 
-  // Fetch symbols on component mount
+  // Fetch assets on component mount
   useEffect(() => {
-    const fetchSymbols = async () => {
-      const symbolList = await getSymbols();
-      setSymbols(symbolList);
+    const fetchAssets = async () => {
+      const assetList = await getAssets();
+      setAssets(assetList);
     };
 
-    fetchSymbols();
+    fetchAssets();
   }, []);
 
   const handleLogin = (username) => {
@@ -30,8 +30,8 @@ function App() {
     return <LoginPage onLogin={handleLogin} />;
   }
 
-  if (symbols.length === 0) {
-    return <div>Loading symbols...</div>;
+  if (assets.length === 0) {
+    return <div>Loading assets...</div>;
   }
 
   // Show the trading tabs after login
@@ -39,7 +39,7 @@ function App() {
     <div className="App">
       <TabbedLayout>
         <div label="Order Book">
-          <OrderBook getOrderBook={getOrderBook} symbols={symbols} />
+          <OrderBook getOrderBook={getOrderBook} assets={assets} />
         </div>
         <div label="Outgoing Orders">
           <OutgoingOrders
@@ -53,7 +53,7 @@ function App() {
           <SendOrder
             createOrder={createOrder}
             username={username}
-            symbols={symbols}
+            assets={assets}
           />
         </div>
         <div label="News">
