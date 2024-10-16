@@ -8,8 +8,7 @@ const OrderBook = ({ getOrderBook, symbols }) => {
     const fetchOrderBook = async () => {
       const data = await getOrderBook(activeSymbol);
       if (data) {
-        const { bid, ask } = data;
-        setOrderBook({ bids: bid, asks: ask });
+        setOrderBook({ bids: data["bids"], asks: data["asks"] });
       }
     };
 

@@ -1,7 +1,7 @@
 const BASE_URL = 'http://3.141.103.158';  // Replace with API URL
 
 // Symbols array
-const symbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'FB'];
+const symbols = ['AUTO', 'SEMI', 'OIL', 'RENEW', 'TECH', 'FIN'];
 
 // Function to fetch available symbols (in case it's dynamic later)
 export const getSymbols = async () => {
@@ -24,20 +24,24 @@ export const getOrders = async (username) => {
 };
   
 // Function to create a new order
-export const createOrder = async (username, order) => {
+export const createOrder = async (username, order, symbol) => {
     try {
-        const response = await fetch(`${BASE_URL}/${username}/createOrder`, {
+        const response = await fetch(`${BASE_URL}/order/create/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(order),
+        body: JSON.stringify({
+            user: username,
+            order: order,
+            asset: symbol
+        }),
         });
         if (!response.ok) {
-        throw new Error('Error creating order');
+            throw new Error('Error creating order');
         }
-        const data = await response.json();
-        return data;
+        const result = await response.json();
+        return result["order_id"];
     } catch (error) {
         console.error(error);
         return null;
@@ -82,12 +86,19 @@ export const getPnL = async (username) => {
 // Function to fetch the order book for a specific symbol
 export const getOrderBook = async (symbol) => {
     try {
-        const response = await fetch(`${BASE_URL}/order-book/${symbol}`);
+        const response = await fetch(`${BASE_URL}/smallview/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ asset: symbol }),
+        });
+
         if (!response.ok) {
-        throw new Error(`Error fetching order book for ${symbol}`);
+            throw new Error(`Error fetching order book for ${symbol}`);
         }
-        const data = await response.json();
-        return data;  // Assuming the response format is { bid: {...}, ask: {...} }
+        const result = await response.json();
+        return result["data"];  // Assuming the response format is { bids: [...], asks: [...] }
     } catch (error) {
         console.error(error);
         return null;

@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 
 const SendOrder = ({ createOrder, username, symbols }) => {
   const [symbol, setSymbol] = useState(symbols[0]);
-  const [size, setSize] = useState('');
   const [price, setPrice] = useState('');
-  const [orderType, setOrderType] = useState('buy');
+  const [qty, setQty] = useState('');
+  const [orderType, setOrderType] = useState('bid');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const orderData = { symbol, size, price, type: orderType };
-    await createOrder(username, orderData);
-    setSize('');
+    const orderData = { order_type: "limit", side: orderType, qty: parseFloat(qty), price: parseFloat(price), lifespan: 30000 };
+    await createOrder(username, orderData, symbol);
     setPrice('');
+    setQty('');
   };
 
   return (
@@ -19,16 +19,16 @@ const SendOrder = ({ createOrder, username, symbols }) => {
       <h3>Send Order</h3>
       <div className="tabs">
         <button
-          className={orderType === 'buy' ? 'active' : ''}
-          onClick={() => setOrderType('buy')}
+          className={orderType === 'bid' ? 'active' : ''}
+          onClick={() => setOrderType('bid')}
         >
-          Buy
+          Bid
         </button>
         <button
-          className={orderType === 'sell' ? 'active' : ''}
-          onClick={() => setOrderType('sell')}
+          className={orderType === 'ask' ? 'active' : ''}
+          onClick={() => setOrderType('ask')}
         >
-          Sell
+          Ask
         </button>
       </div>
       <form onSubmit={handleSubmit}>
@@ -40,17 +40,18 @@ const SendOrder = ({ createOrder, username, symbols }) => {
             </option>
           ))}
         </select>
-        <label>Size</label>
-        <input
-          type="number"
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-        />
+        
         <label>Price</label>
         <input
           type="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
+        />
+        <label>Qty</label>
+        <input
+          type="number"
+          value={qty}
+          onChange={(e) => setQty(e.target.value)}
         />
         <button type="submit" className="send-button">
           Send
