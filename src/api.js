@@ -11,7 +11,7 @@ export const getAssets = async () => {
 // Function to fetch user's outgoing orders
 export const getOrders = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/outgoing/`, {
+        const response = await fetch(`${BASE_URL}/order/outgoing`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export const getOrders = async (username) => {
 
 export const getPosition = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/position/`, {
+        const response = await fetch(`${BASE_URL}/position`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const getPosition = async (username) => {
 
 export const getTrades = async (asset) => {
     try {
-        const response = await fetch(`${BASE_URL}/trades/`, {
+        const response = await fetch(`${BASE_URL}/trades`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export const getTrades = async (asset) => {
 // Function to create a new order
 export const createOrder = async (username, order, asset) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/create/`, {
+        const response = await fetch(`${BASE_URL}/order/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export const createOrder = async (username, order, asset) => {
 // Function to cancel an existing order by ID
 export const cancelOrder = async (username, orderId) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/cancel/`, {
+        const response = await fetch(`${BASE_URL}/order/cancel`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export const cancelOrder = async (username, orderId) => {
 // Function to fetch current PnL for the user
 export const getPnL = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/pnl/`, {
+        const response = await fetch(`${BASE_URL}/pnl`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ export const getPnL = async (username) => {
 // Function to fetch the order book for a specific asset
 export const getOrderBook = async (asset) => {
     try {
-        const response = await fetch(`${BASE_URL}/smallview/`, {
+        const response = await fetch(`${BASE_URL}/smallview`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
