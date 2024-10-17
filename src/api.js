@@ -1,4 +1,4 @@
-const BASE_URL = 'http://3.141.103.158';  // Replace with API URL
+const BASE_URL = 'https://7wpwid5j49.execute-api.us-east-2.amazonaws.com/default';  // Replace with API URL
 
 // assets array
 const assets = ['AUTO', 'SEMI', 'OIL', 'RENEW', 'TECH', 'FIN'];
