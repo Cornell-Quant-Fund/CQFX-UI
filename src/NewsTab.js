@@ -10,11 +10,10 @@ const NewsTab = ({ username, fetchNews, submitAnswer }) => {
       const data = await fetchNews(username);
       setNewsList(data["news"]);
       setAnswerList(data["answers"] || Array(9).fill(null)); // Initialize with submitted answers or empty strings
-      setInputValues(Array(9).fill('')); // Reset input values if needed
     };
 
     fetchNewsData();
-    const intervalId = setInterval(fetchNewsData, 10000); // Fetch news every 10 seconds
+    const intervalId = setInterval(fetchNewsData, 1000); // Fetch news every 10 seconds
 
     return () => clearInterval(intervalId);
   }, [fetchNews, username]);
