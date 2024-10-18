@@ -122,6 +122,15 @@ ul li:last-child {
 	cursor: pointer;
 }
 
+.answer-box form button {
+	background-color: #28a745;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
 .send-order form button:hover {
 	background-color: #218838;
 }

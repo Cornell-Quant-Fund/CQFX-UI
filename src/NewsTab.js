@@ -58,7 +58,8 @@ const NewsTab = ({ username, fetchNews, submitAnswer }) => {
         boxes.push(
           <li key={i}>
             {answerList[i] === null ? ( // Check if the answer has not been submitted
-              <form onSubmit={(e) => handleSubmitAnswer(i, e)}>
+              <div className="answer-box">
+                <form onSubmit={(e) => handleSubmitAnswer(i, e)}>
                 <label htmlFor={`answer${i + 1}`}>Answer {i + 1}:</label>
                 <input
                   type="number"
@@ -75,6 +76,7 @@ const NewsTab = ({ username, fetchNews, submitAnswer }) => {
                   Send
                 </button>
               </form>
+            </div>
             ) : (
               <p>Answer submitted: {answerList[i]}</p> // Show the submitted answer
             )}
