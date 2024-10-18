@@ -1,4 +1,4 @@
-const BASE_URL = 'https://7wpwid5j49.execute-api.us-east-2.amazonaws.com/default';  // Replace with API URL
+const BASE_URL = 'https://cqf-exchange.com';  // Replace with API URL
 
 // assets array
 const assets = ['AUTO', 'SEMI', 'OIL', 'RENEW', 'TECH', 'FIN'];
@@ -11,7 +11,7 @@ export const getAssets = async () => {
 // Function to fetch user's outgoing orders
 export const getOrders = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/outgoing`, {
+        const response = await fetch(`${BASE_URL}/order/outgoing/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export const getOrders = async (username) => {
 
 export const getPosition = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/position`, {
+        const response = await fetch(`${BASE_URL}/position/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const getPosition = async (username) => {
 
 export const getTrades = async (asset) => {
     try {
-        const response = await fetch(`${BASE_URL}/trades`, {
+        const response = await fetch(`${BASE_URL}/trades/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export const getTrades = async (asset) => {
 // Function to create a new order
 export const createOrder = async (username, order, asset) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/create`, {
+        const response = await fetch(`${BASE_URL}/order/create/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export const createOrder = async (username, order, asset) => {
 // Function to cancel an existing order by ID
 export const cancelOrder = async (username, orderId) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/cancel`, {
+        const response = await fetch(`${BASE_URL}/order/cancel/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export const cancelOrder = async (username, orderId) => {
 // Function to fetch current PnL for the user
 export const getPnL = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/pnl`, {
+        const response = await fetch(`${BASE_URL}/pnl/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ export const getPnL = async (username) => {
 // Function to fetch the order book for a specific asset
 export const getOrderBook = async (asset) => {
     try {
-        const response = await fetch(`${BASE_URL}/smallview`, {
+        const response = await fetch(`${BASE_URL}/smallview/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -169,14 +169,44 @@ export const getOrderBook = async (asset) => {
 };
 
 // Function to fetch market news
-export const fetchNews = async () => {
+export const fetchNews = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/news`);
+        const response = await fetch(`${BASE_URL}/news/get/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user: username }),
+        });
         if (!response.ok) {
         throw new Error('Error fetching news');
         }
         const data = await response.json();
         return data; // Assuming the response format is [{ headline, timestamp, source }]
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
+// Function to fetch market news
+export const submitAnswer = async (username, question_id, answer) => {
+    try {
+        const response = await fetch(`${BASE_URL}/answer/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                user: username,
+                question_id: question_id,
+                answer: answer
+             }),
+        });
+        if (!response.ok) {
+        throw new Error('Error fetching news');
+        }
+        return true;
     } catch (error) {
         console.error(error);
         return [];

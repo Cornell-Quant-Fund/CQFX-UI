@@ -146,9 +146,10 @@ const OrderBook = ({ username, getOrderBook, getPosition, getTrades, getPnL, ass
 									{Object.entries(orderBook.asks)
 										.sort(
 											([priceA], [priceB]) =>
-												priceB - priceA
+												priceA - priceB
 										)
 										.slice(0, 5)
+										.reverse()
 										.map(([price, quantity]) => (
 											<li key={price}>
 												<div className="flex flex-row justify-start items-center">

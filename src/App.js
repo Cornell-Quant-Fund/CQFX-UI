@@ -14,6 +14,7 @@ import {
 	createOrder,
 	cancelOrder,
 	fetchNews,
+	submitAnswer,
 	getPnL,
 } from "./api";
 import "./App.css";
@@ -76,7 +77,11 @@ function App() {
 					/>
 				</div>
 				<div label="News">
-					<NewsTab fetchNews={fetchNews} />
+					<NewsTab 
+						fetchNews={fetchNews}
+						username={username}
+						submitAnswer={submitAnswer}
+					/>
 				</div>
 			</TabbedLayout>
 		</div>
