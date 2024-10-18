@@ -1,3 +1,7 @@
+import EventEmitter from 'eventemitter3';
+
+export const eventEmitter = new EventEmitter();
+
 const BASE_URL = 'https://cqf-exchange.com';  // Replace with API URL
 
 // assets array
@@ -93,9 +97,17 @@ export const createOrder = async (username, order, asset) => {
             throw new Error('Error creating order');
         }
         const result = await response.json();
+        eventEmitter.emit('notification', {
+            message: 'Order created successfully!',
+            type: 'success',
+        });
         return result["order_id"];
     } catch (error) {
         console.error(error);
+        eventEmitter.emit('notification', {
+            message: 'Failed to create order.',
+            type: 'error',
+        });
         return null;
     }
 };
@@ -116,9 +128,17 @@ export const cancelOrder = async (username, orderId) => {
         if (!response.ok) {
         throw new Error('Error canceling order');
         }
+        eventEmitter.emit('notification', {
+            message: 'Order cancelled successfully!',
+            type: 'success',
+        });
         return true;
     } catch (error) {
         console.error(error);
+        eventEmitter.emit('notification', {
+            message: 'Failed to cancel order.',
+            type: 'error',
+        });
         return false;
     }
 };

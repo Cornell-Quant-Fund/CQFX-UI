@@ -240,3 +240,33 @@ ul li:last-child {
 .login-page button:hover {
 	background-color: #0056b3;
 }
+
+.notification-banner {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	padding: 10px 20px;
+	z-index: 1000;
+	background-color: #333;
+	color: #fff;
+	border-radius: 5px;
+	font-size: 16px;
+	opacity: 0.9;
+	transition: opacity 0.3s ease-in-out;
+  }
+  
+  .notification-banner.info {
+	background-color: #007bff;
+  }
+  
+  .notification-banner.success {
+	background-color: #28a745;
+  }
+  
+  .notification-banner.error {
+	background-color: #dc3545;
+  }
+  
+  .notification-banner.warning {
+	background-color: #ffc107;
+  }
