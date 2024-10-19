@@ -23,7 +23,7 @@ const OrderBook = ({ username, getOrderBook, getPosition, getTrades, getPnL, ass
 		// Set up periodic fetching of orders and PnL every 10 seconds
 		const intervalId = setInterval(() => {
 			fetchPnLPos();
-		}, 1500); // 1 seconds interval
+		}, 3000); // 1 seconds interval
 
 		return () => clearInterval(intervalId);
 	}, [getPnL, getPosition, username]);

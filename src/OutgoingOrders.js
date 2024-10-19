@@ -17,7 +17,7 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder }) => {
 
 		const intervalId = setInterval(() => {
 			fetchOrders();
-		}, 1000); // 1-second interval to refresh orders
+		}, 3000); // 3-second interval to refresh orders
 
 		return () => clearInterval(intervalId);
 	}, [getOrders, username]);

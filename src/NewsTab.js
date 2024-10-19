@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const NewsTab = ({ username, newsList, submitAnswer }) => {
-  const [answerList, setAnswerList] = useState(Array(9).fill(null)); // Default empty answers
+const NewsTab = ({ username, newsList, answerList, submitAnswer }) => {
   const [inputValues, setInputValues] = useState(Array(9).fill('')); // Temporary input values
 
   const totalAnswers = 9;
@@ -9,15 +8,10 @@ const NewsTab = ({ username, newsList, submitAnswer }) => {
   // Handle submission of each answer
   const handleSubmitAnswer = async (index, e) => {
     e.preventDefault();
-    const answer = inputValues[index]; // Use the input value, not the answerList value
+    const answer = inputValues[index]; // Use the input value
 
     // Submit the answer to the backend
     await submitAnswer(username, index, parseInt(answer));
-
-    // Update the answerList to reflect the submitted answer
-    const newAnswerList = [...answerList];
-    newAnswerList[index] = answer;
-    setAnswerList(newAnswerList);
 
     // Clear the input value after submission
     const newInputValues = [...inputValues];
@@ -25,7 +19,7 @@ const NewsTab = ({ username, newsList, submitAnswer }) => {
     setInputValues(newInputValues);
   };
 
-  // Generate an array of 9 placeholders (answer boxes or news)
+  // Generate an array of 9 placeholders (answer boxes, news, or answers)
   const renderBoxesOrNews = () => {
     const boxes = [];
     for (let i = 0; i < totalAnswers; i++) {
@@ -37,33 +31,36 @@ const NewsTab = ({ username, newsList, submitAnswer }) => {
             <p><strong>{newsItem}</strong></p>
           </li>
         );
-      } else {
-        // Otherwise, display the answer box (if not submitted)
+      } else if (answerList && answerList[i] !== null) {
+        // If there's an answer at this index, display the answer
         boxes.push(
           <li key={i}>
-            {answerList[i] === null ? ( // Check if the answer has not been submitted
-              <div className="answer-box">
-                <form onSubmit={(e) => handleSubmitAnswer(i, e)}>
-                  <label htmlFor={`answer${i + 1}`}>Answer {i + 1}:</label>
-                  <input
-                    type="number"
-                    id={`answer${i + 1}`}
-                    name={`answer${i + 1}`}
-                    value={inputValues[i]} // Use the local input value
-                    onChange={(e) => {
-                      const newInputValues = [...inputValues];
-                      newInputValues[i] = e.target.value; // Update the local input value
-                      setInputValues(newInputValues);
-                    }}
-                  />
-                  <button type="submit" className="send-button">
-                    Send
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <p>Answer submitted: {answerList[i]}</p> // Show the submitted answer
-            )}
+            <p>Answer submitted: {answerList[i]}</p>
+          </li>
+        );
+      } else {
+        // Otherwise, display the answer box
+        boxes.push(
+          <li key={i}>
+            <div className="answer-box">
+              <form onSubmit={(e) => handleSubmitAnswer(i, e)}>
+                <label htmlFor={`answer${i + 1}`}>Answer {i + 1}:</label>
+                <input
+                  type="number"
+                  id={`answer${i + 1}`}
+                  name={`answer${i + 1}`}
+                  value={inputValues[i]} // Use the local input value
+                  onChange={(e) => {
+                    const newInputValues = [...inputValues];
+                    newInputValues[i] = e.target.value; // Update the local input value
+                    setInputValues(newInputValues);
+                  }}
+                />
+                <button type="submit" className="send-button">
+                  Send
+                </button>
+              </form>
+            </div>
           </li>
         );
       }

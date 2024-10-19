@@ -25,6 +25,7 @@ import "./App.css";
 function App() {
 	const [assets, setAssets] = useState([]);
 	const [newsList, setNewsList] = useState([]);
+	const [answerList, setAnswerList] = useState([]);
 	const [username, setUsername] = useState(null);
 	const [orderSide, setOrderSide] = useState("bid");
 	const [notification, setNotification] = useState({ message: "", type: "" });
@@ -72,6 +73,7 @@ function App() {
 		const fetchNewsData = async () => {
 		  const data = await fetchNews(username);
 		  const newNews = data["news"];
+		  const answers = data["answers"];
 	
 		  // Compare the new news list with the current one and trigger notification if there's a difference
 		  if (newNews.length > newsList.length) {
@@ -82,12 +84,13 @@ function App() {
 			});
 			setNewsList(newNews);  // Update the news list
 		  }
+		  setAnswerList(answers);
 		};
   
 	  const intervalId = setInterval(fetchNewsData, 1000);  // Check for new news every 10 seconds
   
 	  return () => clearInterval(intervalId);  // Clean up on component unmount
-	}, [username, newsList]);
+	}, [username, newsList, answerList]);
 
 
 	if (!username) {
@@ -138,6 +141,7 @@ function App() {
 					<NewsTab 
 						username={username}
 						newsList={newsList}
+						answerList={answerList}
 						submitAnswer={submitAnswer}
 					/>
 				</div>
