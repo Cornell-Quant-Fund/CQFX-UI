@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/CQFX-UI/static/css/main.e1a176d7.css",
-    "main.js": "/CQFX-UI/static/js/main.7d88ac1d.js",
+    "main.js": "/CQFX-UI/static/js/main.13c4445c.js",
     "static/js/453.ed3810f9.chunk.js": "/CQFX-UI/static/js/453.ed3810f9.chunk.js",
     "index.html": "/CQFX-UI/index.html",
     "main.e1a176d7.css.map": "/CQFX-UI/static/css/main.e1a176d7.css.map",
-    "main.7d88ac1d.js.map": "/CQFX-UI/static/js/main.7d88ac1d.js.map",
+    "main.13c4445c.js.map": "/CQFX-UI/static/js/main.13c4445c.js.map",
     "453.ed3810f9.chunk.js.map": "/CQFX-UI/static/js/453.ed3810f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e1a176d7.css",
-    "static/js/main.7d88ac1d.js"
+    "static/js/main.13c4445c.js"
   ]
 }
