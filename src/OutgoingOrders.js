@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
+import { getCompletedOrders } from "./api";
 
 const OutgoingOrders = ({ username, getOrders, cancelOrder }) => {
-	const [orders, setOrders] = useState([]);
+	const [outgoingOrders, setOutgoingOrders] = useState([]);
+	const [completedOrders, setCompletedOrders] = useState([]);
 
 	useEffect(() => {
 		const fetchOrders = async () => {
-			const data = await getOrders(username);
-			setOrders(data);
+			const data = await getOrders(username);  // Fetch outgoing orders
+			const completed = await getCompletedOrders(username);  // Fetch completed orders
+			setOutgoingOrders(data);
+			setCompletedOrders(completed);
 		};
 
 		fetchOrders();
 
-		// Set up periodic fetching of orders and PnL every 10 seconds
 		const intervalId = setInterval(() => {
 			fetchOrders();
-		}, 1000); // 1 seconds interval
+		}, 1000); // 1-second interval to refresh orders
 
 		return () => clearInterval(intervalId);
 	}, [getOrders, username]);
@@ -22,22 +25,20 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder }) => {
 	const handleCancel = async (orderId) => {
 		const success = await cancelOrder(username, orderId);
 		if (success) {
-			setOrders((prevOrders) =>
+			setOutgoingOrders((prevOrders) =>
 				prevOrders.filter((order) => order.id !== orderId)
 			);
 		}
 	};
-	console.log(orders);
 
 	return (
-		<div className="outgoing-orders">
+		<div className="orders-container">
 			<h3>Outgoing Orders</h3>
 			<div className="orders-list">
-				{orders.map((order) => (
+				{outgoingOrders.map((order) => (
 					<div key={order.id} className="order">
 						<span>
-							{order.asset} - {order.side} {order.qty}@
-							{order.price}
+							{order.asset} - {order.side} {order.qty}@{order.price}
 						</span>
 						<button
 							onClick={() => handleCancel(order.id)}
@@ -48,7 +49,19 @@ const OutgoingOrders = ({ username, getOrders, cancelOrder }) => {
 					</div>
 				))}
 			</div>
-		</div>
+
+			<h3>Completed Orders</h3>
+			<div className="completed-orders-list">
+				{completedOrders.slice().reverse().map((order) => (
+					<div key={order.id} className="order">
+						<span>
+							{order.asset} - {order.side} {order.qty}@{order.price} (Completed)
+						</span>
+						{/* Completed orders can't be canceled, so no cancel button */}
+					</div>
+				))}
+			</div>
+			</div>
 	);
 };
 

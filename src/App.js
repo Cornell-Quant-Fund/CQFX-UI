@@ -13,6 +13,7 @@ import {
 	getOrderBook,
 	getTrades,
 	getOrders,
+	getCompletedOrders,
 	createOrder,
 	cancelOrder,
 	fetchNews,
@@ -23,6 +24,7 @@ import "./App.css";
 
 function App() {
 	const [assets, setAssets] = useState([]);
+	const [newsList, setNewsList] = useState([]);
 	const [username, setUsername] = useState(null);
 	const [orderSide, setOrderSide] = useState("bid");
 	const [notification, setNotification] = useState({ message: "", type: "" });
@@ -48,13 +50,45 @@ function App() {
 			setNotification({ message: "", type: "" });
 		  }, 3000);  // Dismiss after 3 seconds
 		};
+
+		const handleNews = ({ message, type }) => {
+			setNotification({ message, type });
+			setTimeout(() => {
+			  setNotification({ message: "", type: "" });
+			}, 8);  // Dismiss after 3 seconds
+		  };
 	
 		eventEmitter.on('notification', handleNotification);
-	
+		eventEmitter.on('news', handleNews);
+
 		return () => {
 		  eventEmitter.off('notification', handleNotification); // Cleanup
 		};
 	  }, []);
+
+	  useEffect(() => {
+		if (!username) return;
+	
+		const fetchNewsData = async () => {
+		  const data = await fetchNews(username);
+		  const newNews = data["news"];
+	
+		  // Compare the new news list with the current one and trigger notification if there's a difference
+		  if (newNews.length > newsList.length) {
+			const latestNews = newNews[newNews.length-1];  // Assuming new news is added to the beginning of the array
+			eventEmitter.emit('notification', {
+			  message: `New news: ${latestNews}`,
+			  type: 'info',
+			});
+			setNewsList(newNews);  // Update the news list
+		  }
+		};
+  
+	  const intervalId = setInterval(fetchNewsData, 1000);  // Check for new news every 10 seconds
+  
+	  return () => clearInterval(intervalId);  // Clean up on component unmount
+	}, [username, newsList]);
+
 
 	if (!username) {
 		return <LoginPage onLogin={handleLogin} />;
@@ -87,6 +121,7 @@ function App() {
 					<OutgoingOrders
 						username={username}
 						getOrders={getOrders}
+						getCompletedOrders={getCompletedOrders}
 						cancelOrder={cancelOrder}
 					/>
 				</div>
@@ -101,8 +136,8 @@ function App() {
 				</div>
 				<div label="News">
 					<NewsTab 
-						fetchNews={fetchNews}
 						username={username}
+						newsList={newsList}
 						submitAnswer={submitAnswer}
 					/>
 				</div>

@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-const NewsTab = ({ username, fetchNews, submitAnswer }) => {
-  const [newsList, setNewsList] = useState([]);
-  const [answerList, setAnswerList] = useState(Array(9).fill(null)); // Default empty strings for answers
+const NewsTab = ({ username, newsList, submitAnswer }) => {
+  const [answerList, setAnswerList] = useState(Array(9).fill(null)); // Default empty answers
   const [inputValues, setInputValues] = useState(Array(9).fill('')); // Temporary input values
-
-  useEffect(() => {
-    const fetchNewsData = async () => {
-      const data = await fetchNews(username);
-      setNewsList(data["news"]);
-      setAnswerList(data["answers"] || Array(9).fill(null)); // Initialize with submitted answers or empty strings
-    };
-
-    fetchNewsData();
-    const intervalId = setInterval(fetchNewsData, 1000); // Fetch news every 10 seconds
-
-    return () => clearInterval(intervalId);
-  }, [fetchNews, username]);
 
   const totalAnswers = 9;
 
@@ -41,7 +27,6 @@ const NewsTab = ({ username, fetchNews, submitAnswer }) => {
 
   // Generate an array of 9 placeholders (answer boxes or news)
   const renderBoxesOrNews = () => {
-    console.log(answerList);
     const boxes = [];
     for (let i = 0; i < totalAnswers; i++) {
       if (newsList && i < newsList.length) {
@@ -59,23 +44,23 @@ const NewsTab = ({ username, fetchNews, submitAnswer }) => {
             {answerList[i] === null ? ( // Check if the answer has not been submitted
               <div className="answer-box">
                 <form onSubmit={(e) => handleSubmitAnswer(i, e)}>
-                <label htmlFor={`answer${i + 1}`}>Answer {i + 1}:</label>
-                <input
-                  type="number"
-                  id={`answer${i + 1}`}
-                  name={`answer${i + 1}`}
-                  value={inputValues[i]} // Use the local input value
-                  onChange={(e) => {
-                    const newInputValues = [...inputValues];
-                    newInputValues[i] = e.target.value; // Update the local input value
-                    setInputValues(newInputValues);
-                  }}
-                />
-                <button type="submit" className="send-button">
-                  Send
-                </button>
-              </form>
-            </div>
+                  <label htmlFor={`answer${i + 1}`}>Answer {i + 1}:</label>
+                  <input
+                    type="number"
+                    id={`answer${i + 1}`}
+                    name={`answer${i + 1}`}
+                    value={inputValues[i]} // Use the local input value
+                    onChange={(e) => {
+                      const newInputValues = [...inputValues];
+                      newInputValues[i] = e.target.value; // Update the local input value
+                      setInputValues(newInputValues);
+                    }}
+                  />
+                  <button type="submit" className="send-button">
+                    Send
+                  </button>
+                </form>
+              </div>
             ) : (
               <p>Answer submitted: {answerList[i]}</p> // Show the submitted answer
             )}

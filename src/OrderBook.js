@@ -23,7 +23,7 @@ const OrderBook = ({ username, getOrderBook, getPosition, getTrades, getPnL, ass
 		// Set up periodic fetching of orders and PnL every 10 seconds
 		const intervalId = setInterval(() => {
 			fetchPnLPos();
-		}, 1000); // 1 seconds interval
+		}, 1500); // 1 seconds interval
 
 		return () => clearInterval(intervalId);
 	}, [getPnL, getPosition, username]);
@@ -51,7 +51,7 @@ const OrderBook = ({ username, getOrderBook, getPosition, getTrades, getPnL, ass
 		const interval = setInterval(() => {
 			fetchOrderBook();
 			fetchAndPlotTradeHistory();
-		}, 1000); // refresh every second
+		}, 3000); // refresh every 3 seconds
 
 		return () => clearInterval(interval);
 	}, [activeAsset, getOrderBook, getTrades]);
@@ -60,25 +60,31 @@ const OrderBook = ({ username, getOrderBook, getPosition, getTrades, getPnL, ass
 		const svg = d3.select(chartRef.current);
 		svg.selectAll("*").remove();
 
-		if (!trades || trades.length === 0) {
-			console.warn("no trades");
-			return;
-		}
-
 		const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 		const width = 400 - margin.left - margin.right;
 		const height = 300 - margin.top - margin.bottom;
-
-		// x is just index, y is trade price
-		const x = d3
+		let x, y;
+		if (!trades || trades.length === 0) {
+			x = d3
+			.scaleLinear()
+			.domain([0, 1])
+			.range([0, width]);
+			y = d3
+			.scaleLinear()
+			.domain([0, 1])
+			.nice()
+			.range([height, 0]);
+		} else {
+			x = d3
 			.scaleLinear()
 			.domain([0, trades.length - 1])
 			.range([0, width]);
-		const y = d3
+			y = d3
 			.scaleLinear()
 			.domain([d3.min(trades), d3.max(trades)])
 			.nice()
 			.range([height, 0]);
+		}
 
 		const line = d3
 			.line()

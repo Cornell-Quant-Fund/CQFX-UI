@@ -7,6 +7,27 @@ const BASE_URL = 'https://cqf-exchange.com';  // Replace with API URL
 // assets array
 const assets = ['AUTO', 'SEMI', 'OIL', 'RENEW', 'TECH', 'FIN'];
 
+let news = [];
+
+// Function to fetch and update global news
+export const updateNews = async (username) => {
+    try {
+        const latestNews = await fetchNews(username);  // Fetch the latest news
+        // Compare with the current news
+        if (JSON.stringify(latestNews) !== JSON.stringify(news)) {
+            news = latestNews;  // Update the global news variable
+
+            // Emit an event notifying that news has changed
+            eventEmitter.emit('news', {
+                message: 'News has been updated!',
+                news: latestNews
+            });
+        }
+    } catch (error) {
+        console.error('Error updating news:', error);
+    }
+};
+
 // Function to fetch available assets (in case it's dynamic later)
 export const getAssets = async () => {
   return assets;
@@ -16,6 +37,28 @@ export const getAssets = async () => {
 export const getOrders = async (username) => {
     try {
         const response = await fetch(`${BASE_URL}/order/outgoing/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: username
+            }),
+        });
+        if (!response.ok) {
+            throw new Error('Error fetching orders');
+        }
+        const result = await response.json();
+        return result["orders"];  // Assuming the response format is [{ id, asset, qty, price, side }]
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
+export const getCompletedOrders = async (username) => {
+    try {
+        const response = await fetch(`${BASE_URL}/order/completed/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -199,7 +242,7 @@ export const fetchNews = async (username) => {
             body: JSON.stringify({ user: username }),
         });
         if (!response.ok) {
-        throw new Error('Error fetching news');
+            throw new Error('Error fetching news');
         }
         const data = await response.json();
         return data; // Assuming the response format is [{ headline, timestamp, source }]

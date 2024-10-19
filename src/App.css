@@ -94,6 +94,29 @@ ul li:last-child {
 	background-color: #c82333;
 }
 
+.orders-container .order {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	background-color: #f9f9f9;
+	border: 1px solid #ddd;
+	margin-bottom: 10px;
+	border-radius: 4px;
+}
+
+.orders-container .cancel-button {
+	background-color: #dc3545;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.orders-container .cancel-button:hover {
+	background-color: #c82333;
+}
+
 .send-order form {
 	display: flex;
 	align-items: center;
