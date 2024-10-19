@@ -33,10 +33,9 @@ export const getAssets = async () => {
   return assets;
 };
 
-// Function to fetch user's outgoing orders
-export const getOrders = async (username) => {
+export const getAllSentOrders = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/outgoing/`, {
+        const response = await fetch(`${BASE_URL}/order/all/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,79 +48,37 @@ export const getOrders = async (username) => {
             throw new Error('Error fetching orders');
         }
         const result = await response.json();
-        return result["orders"];  // Assuming the response format is [{ id, asset, qty, price, side }]
+        return result["orders"];  // Assuming the response format is {outgoing:, completed: }
     } catch (error) {
         console.error(error);
         return [];
     }
 };
 
-export const getCompletedOrders = async (username) => {
+export const getOrderBookInfo = async (asset, username) => {
     try {
-        const response = await fetch(`${BASE_URL}/order/completed/`, {
+        const response = await fetch(`${BASE_URL}/orderbook/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
+            body: JSON.stringify({ 
+                asset: asset,
                 user: username
             }),
         });
-        if (!response.ok) {
-            throw new Error('Error fetching orders');
-        }
-        const result = await response.json();
-        return result["orders"];  // Assuming the response format is [{ id, asset, qty, price, side }]
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-};
 
-export const getPosition = async (username) => {
-    try {
-        const response = await fetch(`${BASE_URL}/position/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user: username
-            }),
-        });
         if (!response.ok) {
-            throw new Error('Error fetching orders');
+            throw new Error(`Error fetching order book for ${asset}`);
         }
         const result = await response.json();
-        return result["position"];  // Assuming the response format is [{ id, asset, qty, price, side }]
+        return result["data"];  // Assuming the response format is { bids: [...], asks: [...], pnl:, cash:, position:, trades }
     } catch (error) {
         console.error(error);
-        return [];
+        return null;
     }
-};
+}
 
-export const getTrades = async (asset) => {
-    try {
-        const response = await fetch(`${BASE_URL}/trades/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                asset: asset
-            }),
-        });
-        if (!response.ok) {
-            throw new Error('Error fetching orders');
-        }
-        const result = await response.json();
-        return result["trades"];
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-};
-  
 // Function to create a new order
 export const createOrder = async (username, order, asset) => {
     try {
@@ -186,50 +143,7 @@ export const cancelOrder = async (username, orderId) => {
     }
 };
 
-// Function to fetch current PnL for the user
-export const getPnL = async (username) => {
-    try {
-        const response = await fetch(`${BASE_URL}/pnl/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user: username
-            }),
-        });
-        if (!response.ok) {
-            throw new Error('Error fetching PnL');
-        }
-        const result = await response.json();
-        return result["pnl"];  // Assuming the response is { pnl }
-    } catch (error) {
-        console.error(error);
-        return 0;  // Return 0 if there's an error
-    }
-};
 
-// Function to fetch the order book for a specific asset
-export const getOrderBook = async (asset) => {
-    try {
-        const response = await fetch(`${BASE_URL}/smallview/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ asset: asset }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error fetching order book for ${asset}`);
-        }
-        const result = await response.json();
-        return result["data"];  // Assuming the response format is { bids: [...], asks: [...] }
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
 
 // Function to fetch market news
 export const fetchNews = async (username) => {

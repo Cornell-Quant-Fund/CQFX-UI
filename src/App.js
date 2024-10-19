@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { eventEmitter } from "./api"; // Import the event emitter
 import Notification from "./Notification";
 import OrderBook from "./OrderBook";
-import OutgoingOrders from "./OutgoingOrders";
+import SentOrders from "./SentOrders";
 import SendOrder from "./SendOrder";
 import NewsTab from "./NewsTab";
 import TabbedLayout from "./TabbedLayout";
 import LoginPage from "./LoginPage";
 import {
+	eventEmitter,
+	getOrderBookInfo,
 	getAssets,
-	getPosition,
-	getOrderBook,
-	getTrades,
-	getOrders,
-	getCompletedOrders,
+	getAllSentOrders,
 	createOrder,
 	cancelOrder,
 	fetchNews,
 	submitAnswer,
-	getPnL,
 } from "./api";
 import "./App.css";
 
@@ -113,18 +109,14 @@ function App() {
 				<div label="Order Book">
 					<OrderBook
 						username={username}
-						getOrderBook={getOrderBook}
-						getPosition={getPosition}
-						getTrades={getTrades}
-						getPnL={getPnL}
+						getOrderBookInfo={getOrderBookInfo}
 						assets={assets}
 					/>
 				</div>
-				<div label="Outgoing Orders">
-					<OutgoingOrders
+				<div label="Sent Orders">
+					<SentOrders
 						username={username}
-						getOrders={getOrders}
-						getCompletedOrders={getCompletedOrders}
+						getAllSentOrders={getAllSentOrders}
 						cancelOrder={cancelOrder}
 					/>
 				</div>
